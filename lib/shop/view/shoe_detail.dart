@@ -8,12 +8,159 @@ class ShoeDetails extends StatefulWidget {
 }
 
 class _ShoeDetailsState extends State<ShoeDetails> {
+  bool favourite = false;
+  final sizeList = [39, 40, 41, 42, 43];
+  final colorList = [Colors.orange, Colors.blue, Colors.red, Colors.black];
+  int selectedIndex = 0;
+  int selectedColor = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text('Yahan Kaam krna h aaj'),
-      ),
-    );
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: Padding(
+            padding: EdgeInsets.only(left: 30),
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_rounded,
+                color: Colors.black,
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 30),
+              child: IconButton(
+                icon: Icon(
+                  favourite ? Icons.favorite_border : Icons.favorite_rounded,
+                  color: favourite ? Colors.black : Colors.pink,
+                ),
+                onPressed: () {
+                  setState(() {
+                    favourite = !favourite;
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+        body: Center(
+          child: Column(
+            children: [
+              Text('Air Jordan 1'),
+              Text('Nike Sneakers'),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30),
+                    child: Column(
+                      children: [
+                        Text('Size\n'),
+                        for (int index = 0; index < sizeList.length; index++)
+                          Container(
+                            height: 40,
+                            width: 40,
+                            child: GestureDetector(
+                              child: Center(child: Text('${sizeList[index]}')),
+                              onTap: () {
+                                setState(() {
+                                  selectedIndex = index;
+                                });
+                              },
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: selectedIndex == index
+                                  ? Colors.orange
+                                  : Colors.white,
+                            ),
+                          )
+                      ],
+                    ),
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text('Color\n'),
+                        for (int index = 0; index < colorList.length; index++)
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedColor = index;
+                              });
+                            },
+                            child: Container(
+                              height: selectedColor == index ? 50 : 40,
+                              width: selectedColor == index ? 50 : 40,
+                              margin: EdgeInsets.only(bottom: 10),
+                              child: Center(
+                                  child: selectedColor == index
+                                      ? const Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                        )
+                                      : null),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: colorList[index],
+                              ),
+                            ),
+                          )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 140),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 80,
+                    width: 140,
+                    color: Colors.redAccent,
+                  ),
+                  SizedBox(width: 40),
+                  Container(
+                    height: 80,
+                    width: 140,
+                    color: Colors.redAccent,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Container(
+                      height: 80,
+                      width: 140,
+                      child: Center(child: Text('\$180'))),
+                  SizedBox(width: 40),
+                  Container(
+                    height: 70,
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: Text('Add to Cart'),
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ));
   }
 }
