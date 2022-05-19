@@ -135,6 +135,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                 ],
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
                       height: 80,
@@ -142,19 +143,21 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                       child: Center(child: Text('\$180'))),
                   SizedBox(width: 40),
                   Container(
-                    height: 70,
+                    height: 60,
                     width: 200,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Add to Cart'),
-                      style: ButtonStyle(
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50.00),
+                        color: Colors.blue[50]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Add_To_Cart(),
+                        Expanded(
+                          child: const Center(
+                            child: Text(' Tap to  Cart'),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   )
                 ],
@@ -162,5 +165,40 @@ class _ShoeDetailsState extends State<ShoeDetails> {
             ],
           ),
         ));
+  }
+}
+
+class Add_To_Cart extends StatefulWidget {
+  const Add_To_Cart({Key? key}) : super(key: key);
+
+  @override
+  State<Add_To_Cart> createState() => _Add_To_CartState();
+}
+
+class _Add_To_CartState extends State<Add_To_Cart> {
+  double x = 0;
+  bool added = false;
+  void movebox() {
+    setState(() {
+      added = !added;
+      x = 1;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: movebox,
+      child: AnimatedContainer(
+        height: 80,
+        width: 140,
+        alignment: Alignment(x, 0.0),
+        duration: Duration(seconds: 2),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: added ? Colors.red[50] : Colors.black,
+        ),
+      ),
+    );
   }
 }
