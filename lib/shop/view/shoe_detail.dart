@@ -135,7 +135,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
                       height: 80,
@@ -149,19 +149,16 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                         borderRadius: BorderRadius.circular(50.00),
                         color: Colors.blue[50]),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Add_To_Cart(),
-                        Expanded(
-                          child: const Center(
-                            child: Text(' Tap to  Cart'),
-                          ),
-                        ),
+                        Text('Tap to  Cart'),
                       ],
                     ),
                   )
                 ],
-              )
+              ),
+              Add_To_Cart(),
             ],
           ),
         ));
@@ -176,12 +173,12 @@ class Add_To_Cart extends StatefulWidget {
 }
 
 class _Add_To_CartState extends State<Add_To_Cart> {
-  double x = 0;
+  double x = 1;
   bool added = false;
   void movebox() {
     setState(() {
       added = !added;
-      x = 1;
+      x = x * -1;
     });
   }
 
@@ -190,13 +187,18 @@ class _Add_To_CartState extends State<Add_To_Cart> {
     return GestureDetector(
       onTap: movebox,
       child: AnimatedContainer(
-        height: 80,
-        width: 140,
-        alignment: Alignment(x, 0.0),
+        height: 60,
+        width: 100,
+        color: added ? Colors.red[50] : Colors.black,
+        alignment: Alignment(0, x),
         duration: Duration(seconds: 2),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: added ? Colors.red[50] : Colors.black,
+        child: Container(
+          height: 10,
+          width: 10,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.red,
+          ),
         ),
       ),
     );
