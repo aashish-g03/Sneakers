@@ -20,7 +20,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Padding(
-            padding: EdgeInsets.only(left: 18.0),
+            padding: EdgeInsets.only(top: 20.h, left: 18.0),
             child: Center(
               child: Text(
                 'Air Max 299 SE',
@@ -56,28 +56,33 @@ class _ShoeDetailsState extends State<ShoeDetails> {
             ),
           ),
           actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    favourite ? Icons.favorite_border : Icons.favorite_rounded,
-                    color: favourite ? Colors.black : Colors.pink,
+            Padding(
+              padding: EdgeInsets.only(top: 15.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      favourite
+                          ? Icons.favorite_border
+                          : Icons.favorite_rounded,
+                      color: favourite ? Colors.black : Colors.pink,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        favourite = !favourite;
+                      });
+                    },
                   ),
-                  onPressed: () {
-                    setState(() {
-                      favourite = !favourite;
-                    });
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart_outlined,
-                    color: Colors.black,
+                  IconButton(
+                    icon: Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Colors.black,
+                    ),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
@@ -97,6 +102,16 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                       image: DecorationImage(
                         image: AssetImage('images/NIKE.png'),
                         fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 300.h,
+                    width: 300.w,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('images/Red_Shoe.png'),
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -140,7 +155,12 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                                       },
                                     ),
                                     decoration: BoxDecoration(
-                                      border: Border.all(width: .55),
+                                      border: Border.all(
+                                        width: .55,
+                                        color: selectedIndex == index
+                                            ? colorList[selectedColor]
+                                            : Colors.black,
+                                      ),
                                       borderRadius: BorderRadius.circular(10),
                                       color: selectedIndex == index
                                           ? colorList[selectedColor]
@@ -195,16 +215,6 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                         ),
                       ),
                     ],
-                  ),
-                  Container(
-                    height: 300.h,
-                    width: 300.w,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('images/Red_Shoe.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
                   ),
                 ],
               ),
