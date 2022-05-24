@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:we_can_do_it/shop/view/home_page.dart';
 
 void main() {
@@ -11,12 +12,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sneakers',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-    );
+    return ScreenUtilInit(
+        builder: (context, widget) => MaterialApp(
+              title: 'Sneakers',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: HomePage(),
+            ));
   }
 }

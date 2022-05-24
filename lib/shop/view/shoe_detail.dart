@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ShoeDetails extends StatefulWidget {
   ShoeDetails({Key? key}) : super(key: key);
@@ -73,7 +72,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                 ),
                 IconButton(
                   icon: Icon(
-                    Icons.shopping_cart_checkout_outlined,
+                    Icons.shopping_cart_outlined,
                     color: Colors.black,
                   ),
                   onPressed: () => Navigator.pop(context),
