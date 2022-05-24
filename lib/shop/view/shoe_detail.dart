@@ -248,8 +248,11 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                           ),
                         ],
                       )),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Container(
-                    height: 230,
+                    height: 185,
                     width: 300,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
