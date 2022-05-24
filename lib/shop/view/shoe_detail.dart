@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ShoeDetails extends StatefulWidget {
   ShoeDetails({Key? key}) : super(key: key);
@@ -18,76 +19,142 @@ class _ShoeDetailsState extends State<ShoeDetails> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          title: const Padding(
+            padding: EdgeInsets.only(left: 18.0),
+            child: Center(
+              child: Text(
+                '    Air Max 299 SE',
+                // textAlign:TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
           backgroundColor: Colors.white,
           elevation: 0,
           leading: Padding(
-            padding: EdgeInsets.only(left: 30),
-            child: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                color: Colors.black,
+            padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
+            child: Container(
+              height: 12,
+              decoration: BoxDecoration(
+                  border: Border.all(width: .25),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(0),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_rounded,
+                      size: 20,
+                      color: Colors.black,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
               ),
-              onPressed: () => Navigator.pop(context),
             ),
           ),
           actions: [
-            Padding(
-              padding: EdgeInsets.only(right: 30),
-              child: IconButton(
-                icon: Icon(
-                  favourite ? Icons.favorite_border : Icons.favorite_rounded,
-                  color: favourite ? Colors.black : Colors.pink,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    favourite ? Icons.favorite_border : Icons.favorite_rounded,
+                    color: favourite ? Colors.black : Colors.pink,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      favourite = !favourite;
+                    });
+                  },
                 ),
-                onPressed: () {
-                  setState(() {
-                    favourite = !favourite;
-                  });
-                },
-              ),
+                IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart_checkout_outlined,
+                    color: Colors.black,
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
             ),
           ],
         ),
         body: Center(
           child: Column(
             children: [
-              Text('Air Jordan 1'),
-              Text('Nike Sneakers'),
+              SizedBox(
+                height: 20,
+              ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 30),
+                    padding: const EdgeInsets.only(left: 20),
                     child: Column(
                       children: [
-                        Text('Size\n'),
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 3.0),
+                          child: Text(
+                            'Size\n',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         for (int index = 0; index < sizeList.length; index++)
-                          Container(
-                            height: 40,
-                            width: 40,
-                            child: GestureDetector(
-                              child: Center(child: Text('${sizeList[index]}')),
-                              onTap: () {
-                                setState(() {
-                                  selectedIndex = index;
-                                });
-                              },
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: selectedIndex == index
-                                  ? Colors.orange
-                                  : Colors.white,
-                            ),
-                          )
+                          Column(
+                            children: [
+                              Container(
+                                height: 35,
+                                width: 45,
+                                child: GestureDetector(
+                                  child:
+                                      Center(child: Text('${sizeList[index]}')),
+                                  onTap: () {
+                                    setState(() {
+                                      selectedIndex = index;
+                                    });
+                                  },
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: .55),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: selectedIndex == index
+                                      ? colorList[selectedColor]
+                                      : Colors.white,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),
-                  const Expanded(child: SizedBox()),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Container(
+                      height: 350,
+                      width: 230,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('images/Red_Shoe.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(right: 30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('Color\n'),
+                        Text(
+                          'Colour\n',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         for (int index = 0; index < colorList.length; index++)
                           GestureDetector(
                             onTap: () {
@@ -117,48 +184,83 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                   ),
                 ],
               ),
-              SizedBox(height: 140),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 80,
-                    width: 140,
-                    color: Colors.redAccent,
-                  ),
-                  SizedBox(width: 40),
-                  Container(
-                    height: 80,
-                    width: 140,
-                    color: Colors.redAccent,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                      height: 80,
-                      width: 140,
-                      child: Center(child: Text('\$180'))),
-                  SizedBox(width: 40),
-                  Container(
-                    height: 60,
-                    width: 200,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50.00),
-                        color: Colors.blue[50]),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Add_To_Cart(),
-                        Text('Tap to  Cart'),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: const [
+                        Text(
+                          '\$ 30.99',
+                          style: TextStyle(
+                            fontSize: 30,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '10\%off',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
                       ],
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 0,
+              ),
+              Column(
+                children: [
+                  const Text(
+                    'swipe down to add',
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                      width: 42,
+                      height: 92,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(30),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(top: 15.0),
+                            child: Icon(
+                              Icons.shopping_basket_rounded,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      )),
+                  Container(
+                    height: 230,
+                    width: 300,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('images/shoe_box.png'),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   )
                 ],
-              ),
-              Add_To_Cart(),
+              )
             ],
           ),
         ));
