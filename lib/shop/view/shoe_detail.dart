@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -105,16 +106,17 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                       ),
                     ),
                   ),
-                  Container(
-                    height: 300.h,
-                    width: 300.w,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('images/Red_Shoe.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  AnimateImage(),
+                  // Container(
+                  //   height: 300.h,
+                  //   width: 300.w,
+                  //   decoration: const BoxDecoration(
+                  //     image: DecorationImage(
+                  //       image: AssetImage('images/Red_Shoe.png'),
+                  //       fit: BoxFit.cover,
+                  //     ),
+                  //   ),
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,7 +269,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                     alignment: Alignment.topCenter,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top: 60.h),
+                        padding: EdgeInsets.only(top: 29.h),
                         child: Container(
                           height: 185,
                           width: 247.w,
@@ -279,7 +281,8 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                           ),
                         ),
                       ),
-                      Container(
+                      AnimatedContainer(
+                        duration: Duration(milliseconds: 300),
                         width: 42.w,
                         height: 92.h,
                         decoration: BoxDecoration(
@@ -289,13 +292,21 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                           ),
                         ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Padding(
                               padding: EdgeInsets.only(top: 15.0),
                               child: Icon(
                                 Icons.shopping_basket_rounded,
                                 size: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 15.0),
+                              child: Icon(
+                                Icons.arrow_drop_down_circle_rounded,
+                                size: 17,
                                 color: Colors.white,
                               ),
                             ),
@@ -345,6 +356,38 @@ class _Add_To_CartState extends State<Add_To_Cart> {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.red,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AnimateImage extends StatefulWidget {
+  const AnimateImage({Key? key}) : super(key: key);
+
+  @override
+  State<AnimateImage> createState() => _AnimateImageState();
+}
+
+class _AnimateImageState extends State<AnimateImage>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller =
+      AnimationController(vsync: this, duration: Duration(seconds: 3))
+        ..repeat();
+  late Animation<Offset> _animation =
+      Tween(begin: Offset.zero, end: Offset(0, 50)).animate(_controller);
+  @override
+  Widget build(BuildContext context) {
+    return SlideTransition(
+      position: _animation,
+      child: Container(
+        height: 300.h,
+        width: 300.w,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('images/Red_Shoe.png'),
+            fit: BoxFit.cover,
           ),
         ),
       ),
