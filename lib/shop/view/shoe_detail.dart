@@ -1,6 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+bool pressed = false;
 
 class ShoeDetails extends StatefulWidget {
   ShoeDetails({Key? key}) : super(key: key);
@@ -15,6 +19,13 @@ class _ShoeDetailsState extends State<ShoeDetails> {
   final colorList = [Colors.orange, Colors.blue, Colors.red, Colors.black];
   int selectedIndex = 0;
   int selectedColor = 0;
+  void buttonPressed() {
+    print('hi');
+    setState(() {
+      pressed = !pressed;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +117,19 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                       ),
                     ),
                   ),
-                  AnimateImage(),
+                  pressed
+                      ? TransformBoxWidget(buttonPressed: buttonPressed)
+                      : Container(
+                          height: 300.h,
+                          width: 300.w,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage('images/Red_Shoe.png'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                  // ,
                   // Container(
                   //   height: 300.h,
                   //   width: 300.w,
@@ -319,6 +342,13 @@ class _ShoeDetailsState extends State<ShoeDetails> {
               )
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              pressed = !pressed;
+            });
+          },
         ));
   }
 }
@@ -363,34 +393,79 @@ class _Add_To_CartState extends State<Add_To_Cart> {
   }
 }
 
-class AnimateImage extends StatefulWidget {
-  const AnimateImage({Key? key}) : super(key: key);
-
+class TransformBoxWidget extends StatefulWidget {
+  final buttonPressed;
+  TransformBoxWidget({this.buttonPressed});
   @override
-  State<AnimateImage> createState() => _AnimateImageState();
+  _TransformBoxWidgetState createState() => _TransformBoxWidgetState();
 }
 
-class _AnimateImageState extends State<AnimateImage>
+class _TransformBoxWidgetState extends State<TransformBoxWidget>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _controller =
-      AnimationController(vsync: this, duration: Duration(seconds: 3))
-        ..repeat();
-  late Animation<Offset> _animation =
-      Tween(begin: Offset.zero, end: Offset(0, 50)).animate(_controller);
+  late AnimationController controller;
+  late Animation<double> slideAnimation;
+  late Animation<double> sizeAnimation;
+
   @override
-  Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _animation,
-      child: Container(
-        height: 300.h,
-        width: 300.w,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/Red_Shoe.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
+  void initState() {
+    super.initState();
+
+    controller = AnimationController(
+      duration: Duration(seconds: 5),
+      vsync: this,
     );
+    startAnimation();
   }
+
+  void startAnimation() {
+    final curvedAnimation =
+        CurvedAnimation(parent: controller, curve: Curves.ease);
+
+    sizeAnimation =
+        Tween<double>(begin: 300, end: 100).animate(curvedAnimation);
+    slideAnimation = Tween<double>(begin: 0, end: 0.5).animate(curvedAnimation)
+      ..addStatusListener(listenAnimation);
+
+    controller.reset();
+
+    controller.forward();
+  }
+
+  void listenAnimation(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      controller.removeStatusListener(listenAnimation);
+      widget.buttonPressed();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: AnimatedBuilder(
+          animation: controller,
+          builder: (context, child) {
+            final height = MediaQuery.of(context).size.height;
+            final y = slideAnimation.value * height;
+            return Transform(
+              transform: Matrix4.translationValues(0, y, 0),
+              child: Container(
+                width: sizeAnimation.value.w,
+                height: sizeAnimation.value.h,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('images/Red_Shoe.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
 }
