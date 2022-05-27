@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-bool pressed = false;
+import 'widgets/shoe_animation_widget.dart';
 
 class ShoeDetails extends StatefulWidget {
   ShoeDetails({Key? key}) : super(key: key);
@@ -15,14 +17,58 @@ class ShoeDetails extends StatefulWidget {
 
 class _ShoeDetailsState extends State<ShoeDetails> {
   bool favourite = false;
+  bool pressed = false;
+  bool addedToCart = false;
+  bool isFlipped = false;
   final sizeList = [39, 40, 41, 42, 43];
   final colorList = [Colors.orange, Colors.blue, Colors.red, Colors.black];
   int selectedIndex = 0;
   int selectedColor = 0;
+
+  Widget transition(Widget widget, Animation<double> animation) {
+    void listenAnimation(AnimationStatus status) {
+      if (status == AnimationStatus.completed) {
+        animation.removeStatusListener(listenAnimation);
+        print('flip');
+        if (isFlipped == true) {
+          setState(() {
+            isFlipped = !isFlipped;
+          });
+        }
+      }
+    }
+
+    final flipAnimation = Tween(begin: pi, end: 0.0).animate(animation)
+      ..addStatusListener(listenAnimation);
+
+    return AnimatedBuilder(
+      animation: flipAnimation,
+      child: widget,
+      builder: (context, widget) {
+        final isUnder = (ValueKey(isFlipped) != widget!.key);
+        final value =
+            isUnder ? min(flipAnimation.value, pi / 2) : flipAnimation.value;
+        return Transform(
+          transform: Matrix4.rotationX(value),
+          child: widget,
+          alignment: Alignment.center,
+        );
+      },
+    );
+  }
+
   void buttonPressed() {
     print('hi');
     setState(() {
+      isFlipped = !isFlipped;
       pressed = !pressed;
+    });
+  }
+
+  void boxFlipped() {
+    print('hi');
+    setState(() {
+      isFlipped = !isFlipped;
     });
   }
 
@@ -118,7 +164,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                     ),
                   ),
                   pressed
-                      ? TransformBoxWidget(buttonPressed: buttonPressed)
+                      ? ShoeWidget(buttonPressed: buttonPressed)
                       : Container(
                           height: 300.h,
                           width: 300.w,
@@ -293,19 +339,37 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(top: 29.h),
-                        child: Container(
-                          height: 185,
-                          width: 247.w,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('images/shoe_box.png'),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                        child: AnimatedSwitcher(
+                          duration: const Duration(seconds: 1),
+                          switchInCurve: Curves.fastLinearToSlowEaseIn,
+                          transitionBuilder: transition,
+                          child: isFlipped
+                              ? Container(
+                                  key: ValueKey(1),
+                                  height: 185,
+                                  width: 247.w,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          'images/Full_shoe_box.png'),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  key: ValueKey(2),
+                                  height: 185,
+                                  width: 247.w,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage('images/shoe_box.png'),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
                         ),
                       ),
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
+                      Container(
                         width: 42.w,
                         height: 92.h,
                         decoration: BoxDecoration(
@@ -316,8 +380,8 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Padding(
+                          children: const [
+                            Padding(
                               padding: EdgeInsets.only(top: 15.0),
                               child: Icon(
                                 Icons.shopping_basket_rounded,
@@ -326,7 +390,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 15.0),
+                              padding: EdgeInsets.only(bottom: 15.0),
                               child: Icon(
                                 Icons.arrow_drop_down_circle_rounded,
                                 size: 17,
@@ -351,121 +415,4 @@ class _ShoeDetailsState extends State<ShoeDetails> {
           },
         ));
   }
-}
-
-class Add_To_Cart extends StatefulWidget {
-  const Add_To_Cart({Key? key}) : super(key: key);
-
-  @override
-  State<Add_To_Cart> createState() => _Add_To_CartState();
-}
-
-class _Add_To_CartState extends State<Add_To_Cart> {
-  double x = 1;
-  bool added = false;
-  void movebox() {
-    setState(() {
-      added = !added;
-      x = x * -1;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: movebox,
-      child: AnimatedContainer(
-        height: 60,
-        width: 100,
-        color: added ? Colors.red[50] : Colors.black,
-        alignment: Alignment(0, x),
-        duration: Duration(seconds: 2),
-        child: Container(
-          height: 10,
-          width: 10,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.red,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class TransformBoxWidget extends StatefulWidget {
-  final buttonPressed;
-  TransformBoxWidget({this.buttonPressed});
-  @override
-  _TransformBoxWidgetState createState() => _TransformBoxWidgetState();
-}
-
-class _TransformBoxWidgetState extends State<TransformBoxWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController controller;
-  late Animation<double> slideAnimation;
-  late Animation<double> sizeAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = AnimationController(
-      duration: Duration(seconds: 5),
-      vsync: this,
-    );
-    startAnimation();
-  }
-
-  void startAnimation() {
-    final curvedAnimation =
-        CurvedAnimation(parent: controller, curve: Curves.ease);
-
-    sizeAnimation =
-        Tween<double>(begin: 300, end: 100).animate(curvedAnimation);
-    slideAnimation = Tween<double>(begin: 0, end: 0.5).animate(curvedAnimation)
-      ..addStatusListener(listenAnimation);
-
-    controller.reset();
-
-    controller.forward();
-  }
-
-  void listenAnimation(AnimationStatus status) {
-    if (status == AnimationStatus.completed) {
-      controller.removeStatusListener(listenAnimation);
-      widget.buttonPressed();
-    }
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => Center(
-        child: AnimatedBuilder(
-          animation: controller,
-          builder: (context, child) {
-            final height = MediaQuery.of(context).size.height;
-            final y = slideAnimation.value * height;
-            return Transform(
-              transform: Matrix4.translationValues(0, y, 0),
-              child: Container(
-                width: sizeAnimation.value.w,
-                height: sizeAnimation.value.h,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('images/Red_Shoe.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      );
 }
