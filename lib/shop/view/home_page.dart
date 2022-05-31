@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:we_can_do_it/shop/view/shoe_detail.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:video_player/video_player.dart';
+import 'package:card_swiper/card_swiper.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -21,35 +21,11 @@ class _HomePageState extends State<HomePage> {
     "Casual",
   ];
   int selectedIndex = 0;
-  bool liked = false;
-  late VideoPlayerController _controller;
-  late Future<void> _initializeVideoPlayerFuture;
-  @override
-  void initState() {
-    super.initState();
-
-    // Create and store the VideoPlayerController. The VideoPlayerController
-    // offers several different constructors to play videos from assets, files,
-    // or the internet.
-    _controller = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-    );
-
-    // Initialize the controller and store the Future for later use.
-    _initializeVideoPlayerFuture = _controller.initialize();
-
-    // Use the controller to loop the video.
-    _controller.setLooping(true);
-  }
-
-  @override
-  void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
-    _controller.dispose();
-
-    super.dispose();
-  }
-
+  List images = [
+    'images/Full_shoe_box.png',
+    'images/NIKE.png',
+    'images/shoe_box.png',
+  ];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -100,6 +76,77 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Column(
           children: [
+            SizedBox(height: 33.h),
+            Container(
+              height: 150.h,
+              width: 334.w,
+              child: Swiper(
+                itemBuilder: (context, index) {
+                  final image = images[index];
+                  return Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      Container(
+                        height: 150.h,
+                        width: 334.w,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(width: 26.w),
+                            Column(
+                              children: [
+                                SizedBox(height: 31.h),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: '20% ',
+                                        style: TextStyle(
+                                            fontSize: 30.sp,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      TextSpan(
+                                        text: 'Discount',
+                                        style: TextStyle(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      TextSpan(
+                                        text: '\non your first purchase',
+                                        style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 22.h),
+                              ],
+                            ),
+                          ],
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(239, 239, 239, 1),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(18.r),
+                          ),
+                        ),
+                      ),
+                      Image.asset(
+                        'images/Green 1.png',
+                      )
+                    ],
+                  );
+                },
+                indicatorLayout: PageIndicatorLayout.COLOR,
+                autoplay: true,
+                duration: 500,
+                autoplayDelay: 5000,
+                itemCount: images.length,
+                pagination: const SwiperPagination(),
+                control: const SwiperControl(),
+              ),
+            ),
             Expanded(
               child: ListView.builder(
                 itemBuilder: (context, index) {
@@ -154,183 +201,6 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            Container(
-              width: 300.w,
-              decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(20)),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.r),
-                child: Stack(
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (_controller.value.isPlaying) {
-                            _controller.pause();
-                          } else {
-                            _controller.play();
-                          }
-                        });
-                      },
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10.r),
-                            child: FutureBuilder(
-                              future: _initializeVideoPlayerFuture,
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  return AspectRatio(
-                                    aspectRatio: _controller.value.aspectRatio,
-                                    child: VideoPlayer(_controller),
-                                  );
-                                } else {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                          (_controller.value.isPlaying)
-                              ? SizedBox()
-                              : Center(
-                                  child: Icon(
-                                  Icons.play_circle_outline_rounded,
-                                  size: 70.r,
-                                  color: Colors.white54,
-                                )),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 48.h,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [Colors.black54, Colors.transparent],
-                        ),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10.r),
-                          topRight: Radius.circular(10.r),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5, top: 5),
-                            child: CircleAvatar(
-                              radius: 20,
-                              foregroundImage: AssetImage('images/NIKE.png'),
-                              backgroundColor:
-                                  Theme.of(context).textTheme.headline1!.color,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 11, left: 7),
-                                child: Text(
-                                  'aashish',
-                                  overflow: TextOverflow.ellipsis,
-
-                                  //style:Theme.of(context).textTheme.subtitle1
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 12.sp),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 1, left: 6),
-                                child: Text(
-                                  'aashish',
-                                  overflow: TextOverflow.ellipsis,
-                                  // style:Theme.of(context).textTheme.subtitle2
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 11.sp),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: double.infinity,
-                          height: 28.h,
-                          padding: EdgeInsets.only(bottom: 5.h),
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [Colors.black54, Colors.transparent],
-                              ),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(10.r),
-                                bottomRight: Radius.circular(10.r),
-                              )),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: GestureDetector(
-                                  child: Icon(
-                                      liked
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: liked ? Colors.red : Colors.black),
-                                  onTap: () {},
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10.h, left: 3.w),
-                                child: Text(
-                                  '1',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 18.sp),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10.h, left: 35.w),
-                                child: GestureDetector(
-                                  child: Icon(Icons.insert_comment_outlined,
-                                      color: Colors.red[100]),
-                                  onTap: () {},
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 10.h, left: 3.w),
-                                child: Text(
-                                  '1',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 18.sp),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 200,
-            )
           ],
         ),
       ),
