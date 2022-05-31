@@ -16,12 +16,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        builder: (context, widget) => MaterialApp(
-              title: 'Sneakers',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-              ),
-              home: HomePage(),
-            ));
+      builder: (context, widget) => MaterialApp(
+        title: 'Sneakers',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: HomePage(),
+      ),
+    );
   }
 }
