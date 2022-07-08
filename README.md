@@ -1,4 +1,4 @@
-# we_can_do_it
+# Sneakex
 
 A new Flutter project.
 
