@@ -6,10 +6,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../models/shoe_model.dart';
 import 'widgets/shoe_animation_widget.dart';
 
 class ShoeDetails extends StatefulWidget {
-  ShoeDetails({Key? key}) : super(key: key);
+  Shoe shoe;
+  ShoeDetails(this.shoe);
 
   @override
   State<ShoeDetails> createState() => _ShoeDetailsState();
@@ -81,7 +83,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
             padding: EdgeInsets.only(top: 20.h, left: 18.0),
             child: Center(
               child: Text(
-                'Air Max 299 SE',
+                widget.shoe.shoeName,
                 // textAlign:TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
@@ -168,9 +170,11 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                       : Container(
                           height: 300.h,
                           width: 300.w,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('images/Red_Shoe.png'),
+                              image: AssetImage('images/Red_Shoe.png'
+                                  //widget.shoe.imageUrl
+                                  ),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -204,38 +208,40 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                               ),
                             ),
                             for (int index = 0;
-                                index < sizeList.length;
+                                index < widget.shoe.sizeList.length;
                                 index++)
                               Column(
                                 children: [
-                                  Container(
-                                    height: 30.h,
-                                    width: 50.w,
-                                    child: GestureDetector(
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedIndex = index;
+                                      });
+                                    },
+                                    child: Container(
+                                      height: 30.h,
+                                      width: 50.w,
                                       child: Center(
                                           child: Text(
-                                        '${sizeList[index]}',
+                                        '${widget.shoe.sizeList[index]}',
                                         style: TextStyle(
                                           fontSize: 14.sp,
                                         ),
                                       )),
-                                      onTap: () {
-                                        setState(() {
-                                          selectedIndex = index;
-                                        });
-                                      },
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: .55,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: .55,
+                                          color: selectedIndex == index
+                                              ? widget.shoe
+                                                  .colorsList[selectedColor]
+                                              : Colors.black,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
                                         color: selectedIndex == index
-                                            ? colorList[selectedColor]
-                                            : Colors.black,
+                                            ? widget
+                                                .shoe.colorsList[selectedColor]
+                                            : Colors.white,
                                       ),
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: selectedIndex == index
-                                          ? colorList[selectedColor]
-                                          : Colors.white,
                                     ),
                                   ),
                                   SizedBox(
@@ -257,7 +263,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                                   fontWeight: FontWeight.bold, fontSize: 14.sp),
                             ),
                             for (int index = 0;
-                                index < colorList.length;
+                                index < widget.shoe.colorsList.length;
                                 index++)
                               GestureDetector(
                                 onTap: () {
@@ -278,7 +284,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                                           : null),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: colorList[index],
+                                    color: widget.shoe.colorsList[index],
                                   ),
                                 ),
                               )
@@ -297,7 +303,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                     Column(
                       children: [
                         Text(
-                          '\$ 30.99',
+                          '\$ ${widget.shoe.price}',
                           style: TextStyle(
                             fontSize: 24.sp,
                             color: Colors.black,
@@ -305,7 +311,7 @@ class _ShoeDetailsState extends State<ShoeDetails> {
                           ),
                         ),
                         Text(
-                          '10% OFF',
+                          '${widget.shoe.discountP}% OFF',
                           style: TextStyle(
                             fontSize: 12.sp,
                             color: Colors.red,

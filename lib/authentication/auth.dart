@@ -18,6 +18,17 @@ class _AuthenticationPageState extends State<AuthenticationPage>
 
   ValueNotifier<bool> showSignInPage = ValueNotifier<bool>(true);
 
+  void changeAuth() {
+    if (isLogin) {
+      _controller.forward();
+    } else {
+      _controller.reverse();
+    }
+    setState(() {
+      isLogin = !isLogin;
+    });
+  }
+
   @override
   void initState() {
     _controller =
@@ -46,19 +57,12 @@ class _AuthenticationPageState extends State<AuthenticationPage>
           Center(
               child: AnimatedSwitcher(
             duration: Duration(milliseconds: 500),
-            child: isLogin ? Login() : SignUp(),
+            child: isLogin ? Login(changeAuth) : SignUp(changeAuth),
           ))
         ],
       ),
       floatingActionButton: FloatingActionButton(onPressed: (() {
-        if (isLogin) {
-          _controller.forward();
-        } else {
-          _controller.reverse();
-        }
-        setState(() {
-          isLogin = !isLogin;
-        });
+        changeAuth();
       })),
     );
   }
